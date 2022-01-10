@@ -1,25 +1,21 @@
-import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from math import log2
 import numpy as np
 
 from utils import WSConv2d, PixelNormalization, Minibatch_std
 
-"""
-Factors is used in Discrmininator and Generator for how much
-the channels should be multiplied and expanded for each layer,
-so specifically the first 5 layers the channels stay the same,
-whereas when we increase the img_size (towards the later layers)
-we decrease the number of chanels by 1/2, 1/4, etc.
-"""
-factors = [1, 1, 1, 1, 1 / 2, 1 / 4, 1 / 8, 1 / 16, 1 / 32]
-
 
 class FromRGB(nn.Module):
+    """
+    Input image through weighted scale convolution
+    """
+
     def __init__(self, in_channels, out_channels):
+        """
+        :param in_channels: number of input channels in conv.
+        :param out_channels: number of output channels in conv.
+        """
         super().__init__()
-        self.conv = WSConv2d(in_channels, out_channels, kernel_size=(1,1), stride=(1,1))
+        self.conv = WSConv2d(in_channels, out_channels, kernel_size=(1, 1), stride=(1, 1))
         self.lRelu = nn.LeakyReLU(0.2)
 
     def forward(self, x):
@@ -27,9 +23,17 @@ class FromRGB(nn.Module):
 
 
 class ToRGB(nn.Module):
+    """
+    Convert given image to RGB image with weighted scale convolution - kernel_size(1,1), stride=(1,1).
+    """
+
     def __init__(self, in_channels, out_channels):
+        """
+        :param in_channels: number of input channels in conv.
+        :param out_channels: number of output channels in conv.
+        """
         super().__init__()
-        self.conv = WSConv2d(in_channels, out_channels, kernel_size=(1,1), stride=(1,1))
+        self.conv = WSConv2d(in_channels, out_channels, kernel_size=(1, 1), stride=(1, 1))
 
     def forward(self, x):
         return self.conv(x)
@@ -40,13 +44,13 @@ class ConvGBlock(nn.Module):
         super().__init__()
         if initial_block:
             self.upsample = None
-            self.conv1 = WSConv2d(in_channels, out_channels, kernel_size=(4,4), stride=(1,1), padding=(3,3))
+            self.conv1 = WSConv2d(in_channels, out_channels, kernel_size=(4, 4), stride=(1, 1), padding=(3, 3))  # pad=3 since 1x1 -> 4x4
 
         else:
             self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
-            self.conv1 = WSConv2d(in_channels, out_channels, kernel_size=(3,3), stride=(1,1), padding=(1,1))
+            self.conv1 = WSConv2d(in_channels, out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
 
-        self.conv2 = WSConv2d(out_channels, out_channels, kernel_size=(3,3), stride=(1,1), padding=(1,1))
+        self.conv2 = WSConv2d(out_channels, out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
         self.leakyR = nn.LeakyReLU(0.2)
         self.pn = PixelNormalization()
         nn.init.normal_(self.conv1.weight)
@@ -73,8 +77,9 @@ class ConvDBlock(nn.Module):
 
         if initial_block:
             self.miniBatchStd = Minibatch_std()
-            self.conv1 = WSConv2d(in_channels+1, out_channels, kernel_size=(3,3), stride=(1,1), padding=(1,1))
-            self.conv2 = WSConv2d(out_channels, out_channels, kernel_size=(4,4), stride=(1,1)) # in_channels=out_channels
+            self.conv1 = WSConv2d(in_channels + 1, out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            self.conv2 = WSConv2d(out_channels, out_channels, kernel_size=(4, 4),
+                                  stride=(1, 1))  # in_channels=out_channels , pad=0,=> 4x4 -> 1x1
             self.outLayer = nn.Sequential(
                 nn.Flatten(),
                 nn.Linear(out_channels, 1)
@@ -82,12 +87,11 @@ class ConvDBlock(nn.Module):
 
         else:
             self.miniBatchStd = None
-            self.conv1 = WSConv2d(in_channels, out_channels, kernel_size=(3,3), stride=(1,1), padding=(1,1))
-            self.conv2 = WSConv2d(in_channels, out_channels, kernel_size=(3,3), stride=(1,1), padding=(1,1))
-            self.outLayer = nn.AvgPool2d(kernel_size=(2,2), stride=(2,2)) # downsampling with avgpooling
+            self.conv1 = WSConv2d(in_channels, out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            self.conv2 = WSConv2d(in_channels, out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            self.outLayer = nn.AvgPool2d(kernel_size=(2, 2), stride=(2, 2))  # downsampling with avgpooling
 
         self.leakyR = nn.LeakyReLU(0.2)
-        self.pn = PixelNormalization()
         nn.init.normal_(self.conv1.weight)
         nn.init.normal_(self.conv2.weight)
         nn.init.zeros_(self.conv1.bias)
@@ -113,26 +117,26 @@ class Generator(nn.Module):
         super().__init__()
         # initially
         self.depth = 1
-        self.alpha = 1 # between 0 to 1, increasing later on
+        self.alpha = 1
         self.fade_iters = 0
         self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
         self.current_layers = nn.ModuleList([ConvGBlock(z_dim, z_dim, initial_block=True)])
         self.rgbs_layers = nn.ModuleList([ToRGB(z_dim, 3)])
 
-        for layer in range(2, int(np.log2(out_res))): # np.log2(256) = 8
+        for layer in range(2, int(np.log2(out_res))):  # np.log2(256) = 8
             if layer < 6:
                 # All low resolution blocks 8x8, 16x16, 32x32 with same 512 channels
                 in_channels, out_channels = 512, 512
 
             else:
                 # layer > 6 : 5th block(64x64), the number of channels halved for each block
-                in_channels, out_channels = int(512 / 2**(layer - 6)), int(512 / 2**(layer - 6))
+                in_channels, out_channels = int(512 / 2 ** (layer - 6)), int(512 / 2 ** (layer - 6))
 
             self.current_layers.append(ConvGBlock(in_channels, out_channels))
             self.rgbs_layers.append(ToRGB(out_channels, 3))
 
     def forward(self, x):
-        for block in self.current_layers[:self.depth-1]:
+        for block in self.current_layers[:self.depth - 1]:
             x = block(x)
 
         out = self.current_layers[self.depth - 1](x)
@@ -140,17 +144,17 @@ class Generator(nn.Module):
         if self.alpha < 1:
             x_old = self.upsample(x)
             old_rgb = self.rgbs_layers[self.depth - 2](x_old)
-            x_rgb_out = (1-self.alpha) * old_rgb + self.alpha * x_rgb_out
+            x_rgb_out = (1 - self.alpha) * old_rgb + self.alpha * x_rgb_out
 
             self.alpha += self.fade_iters
 
         return x_rgb_out
 
     def growing_net(self, num_iters):
-            self.fade_iters = 1 / num_iters
-            self.alpha = 1 / num_iters
+        self.fade_iters = 1 / num_iters
+        self.alpha = 1 / num_iters
 
-            self.depth += 1
+        self.depth += 1
 
 
 class Discriminator(nn.Module):
@@ -160,7 +164,7 @@ class Discriminator(nn.Module):
         self.depth = 1
         self.alpha = 1  # between 0 to 1, increasing later on
         self.fade_iters = 0
-        self.downsample = nn.AvgPool2d(kernel_size=(2,2), stride=(2,2))
+        self.downsample = nn.AvgPool2d(kernel_size=(2, 2), stride=(2, 2))
 
         self.current_layers = nn.ModuleList([ConvDBlock(z_dim, z_dim, initial_block=True)])
         self.fromRgbLayers = nn.ModuleList([FromRGB(3, z_dim)])
@@ -198,6 +202,3 @@ class Discriminator(nn.Module):
         self.alpha = 1 / num_iters
 
         self.depth += 1
-
-
-

@@ -1,12 +1,12 @@
 import torch
 import torch.nn as nn
 from torch.nn.parameter import Parameter
-import numpy as np
 import torch.nn.functional as F
+
 
 class WSConv2d(nn.Module):
     """
-    Equalized Learning Rate Module
+    Weighted Scale Convolution
     """
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0):
         super().__init__()
@@ -33,6 +33,7 @@ class PixelNormalization(nn.Module):
         self.epsilon = 1e-8
 
     def forward(self, x):
+        # N x C x H x W
         denominator = torch.sqrt(torch.mean(x**2, dim=1, keepdim=True) + self.epsilon)
         return x / denominator
 
