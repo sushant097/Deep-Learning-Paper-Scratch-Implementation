@@ -15,16 +15,6 @@ class Block(nn.Module):
             nn.Dropout(0.5)
         )
 
-        self.weight_init()
-
-    def weight_init(self):
-        for block in self._modules:
-            try:
-                for m in self._modules[block]:
-                    custom_init(m)
-            except:
-                custom_init(block)
-
     def forward(self, x):
         return self.conv(x)
 
@@ -61,16 +51,6 @@ class Discriminator(nn.Module):
         self.fc_dis = nn.Sequential(nn.Linear(512 * ds_size**2, 1), nn.Sigmoid())
         # Ouput Layer: aux-classifier fc
         self.fc_aux = nn.Sequential(nn.Linear(512 * ds_size**2, num_classes), nn.Softmax())
-
-        self.weight_init()
-
-    def weight_init(self):
-        for block in self._modules:
-            try:
-                for m in self._modules[block]:
-                    custom_init(m)
-            except:
-                custom_init(block)
 
     def forward(self, x):
         x = self.initial(x)

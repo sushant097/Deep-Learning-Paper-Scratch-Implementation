@@ -1,9 +1,11 @@
 import torch
 import numpy as np
 
+imgSize = 32
 lr = 0.0002
 epochs = 20
 batch_size=100
+num_classes = 10 # cifar10
 # narmalization constraints
 mean, std = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)
 data_dir = "data"

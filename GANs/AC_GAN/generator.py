@@ -14,15 +14,15 @@ class Block(nn.Module):
             nn.ReLU()
         )
 
-        self.weight_init()
-
-    def weight_init(self):
-        for block in self._modules:
-            try:
-                for m in self._modules[block]:
-                    custom_init(m)
-            except:
-                custom_init(block)
+    #     self.weight_init()
+    #
+    # def weight_init(self):
+    #     for block in self._modules:
+    #         try:
+    #             for m in self._modules[block]:
+    #                 custom_init(m)
+    #         except:
+    #             custom_init(block)
 
     def forward(self, x):
         x = self.conv(x)
@@ -52,15 +52,15 @@ class Generator(nn.Module):
             nn.Tanh()
         )
 
-        self.weight_init()
-
-    def weight_init(self):
-        for block in self._modules:
-            try:
-                for m in self._modules[block]:
-                    custom_init(m)
-            except:
-                custom_init(block)
+    #     self.weight_init()
+    #
+    # def weight_init(self):
+    #     for block in self._modules:
+    #         try:
+    #             for m in self._modules[block]:
+    #                 custom_init(m)
+    #         except:
+    #             custom_init(block)
 
     def forward(self, x):
         x = x.view(-1, self.in_channels)

@@ -8,6 +8,9 @@ def custom_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
         m.weight.data.normal_(0.0, 0.02)
+    if classname.find('Block') != -1:
+        if classname.find('Conv') != -1:
+            m.weight.data.normal_(0.0, 0.02)
     elif classname.find('BatchNorm') != -1:
         m.weight.data.normal_(1.0, 0.02)
         m.bias.data.fill_(0)
@@ -38,7 +41,6 @@ def show_batch(dl, nmax=64):
 def denorm(img_tensors, mean, std):
     "Denormalize image"
     return img_tensors * std[0] + mean[0]
-
 
 
 def get_default_device():
