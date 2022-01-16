@@ -5,7 +5,7 @@ I try to make the implementation as simple as possible.
 Celebrities Images 100k of 128x128. Dataset from [Kaggle Celebrities Dataset](https://www.kaggle.com/greg115/celebrities-100k)
 Dataset sample:
 
-![](images\celebrity_dataset_sample.png)
+![](images/celebrity_dataset_sample.png)
 
 ### Training
 Trained for 60 epochs with the parameters are in given notebook. Some changes are made in generator and discriminator architecture to generate the realistic output. 
@@ -20,10 +20,10 @@ Output:
 ![](images/celebriti_new_60_epochs.gif)
 
 ### Loss:
-![](images\losses.png)
+![](images/losses.png)
 
 ### Scores:
-![](images\scores.png)
+![](images/scores.png)
 
 ## DC GAN Paper
 
