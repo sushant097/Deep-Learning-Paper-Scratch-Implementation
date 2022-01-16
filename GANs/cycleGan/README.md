@@ -17,7 +17,7 @@ Edit the config.py file to match the setup you want to use. Then run train.py
 
 #### Annotated CycleGAN Paper - By Me
 ![](images/annotate_Cycle_gan.png)
-[Annotate Cycle GAN Paper](https://github.com/sushant097/annotated_research_papers/blob/master/GANs/cycleGAN-2017.pdf)
+[Annotated Cycle GAN Paper](https://github.com/sushant097/annotated_research_papers/blob/master/GANs/cycleGAN-2017.pdf)
 
 ## CycleGAN paper
 Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks by Jun-Yan Zhu, Taesung Park, Phillip Isola, Alexei A. Efros
