@@ -149,7 +149,7 @@ class MappingNetwork(nn.Module):
 
 
 # Generator
-class StyleSynthesisNetwork(nn.Module): # StyleBasedGenerator
+class StyleSynthesisNetwork(nn.Module):
     """
     Main Style Synthesis Module
     Convs:
@@ -208,7 +208,6 @@ class StyleSynthesisNetwork(nn.Module): # StyleBasedGenerator
                 mix_steps=[],  # steps inside will use latent_z[1], else latent_z[0]
                 latent_w_center=None,  # Truncation trick in W
                 psi=0):  # parameter of truncation
-
         if type(latent_z) != type([]):
             print('You should use list to package your latent_z')
             latent_z = [latent_z]
@@ -220,7 +219,6 @@ class StyleSynthesisNetwork(nn.Module): # StyleBasedGenerator
 
         latent_w = [self.fcs(latent) for latent in latent_z]
         batch_size = latent_w[0].size(0)
-
         # Truncation trick in W
         # Only usable in estimation
         if latent_w_center is not None:
@@ -332,7 +330,7 @@ class Discriminator(nn.Module):
     def forward(self, image,
                 step=0,  # Step means how many layers (count from 4 x 4) are used to train
                 alpha=-1):  # Alpha is the parameter of smooth conversion of resolution):
-
+        global result
         for i in range(step, -1, -1):
             # Get the index of current layer
             # Count from the bottom layer (4 * 4)
