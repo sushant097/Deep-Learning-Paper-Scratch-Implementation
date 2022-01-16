@@ -131,7 +131,7 @@ for epoch in range(1 + opt.resume, opt.epochs + 1):
             batch_size = schedule[1][c]
             growing = schedule[2][0]
             data_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, num_workers=8)
-            tot_iter_num = tot_iter_num = (len(dataset) / batch_size)
+            tot_iter_num = (len(dataset) / batch_size)
             G_net.growing_net(growing * tot_iter_num)
             D_net.growing_net(growing * tot_iter_num)
             size = 2 ** (G_net.depth + 1)
