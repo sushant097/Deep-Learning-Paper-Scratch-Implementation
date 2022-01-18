@@ -15,6 +15,7 @@ Framework: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&l
 * GANs
   * [AC-GAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/AC_GAN)
   * [CycleGAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/cycleGan)
+  * [Neural Style Transfer](https://github.com/sushant097/Neural-Style-Transfer-Implementation)
   * [DCGAN - Celebrity Face Generation](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/DCGAN_Celebrity_Generation)
   * [ProGAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/ProGAN)
   * [StyleGAN (Under Implementation)](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/StyleGAN)
