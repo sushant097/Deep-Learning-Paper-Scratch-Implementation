@@ -317,8 +317,8 @@ class Discriminator(nn.Module):
         self.from_rgbs = nn.ModuleList([*layers_rgbs])
 
         layers_conv = [ConvBlock(513, 512, 3, 1, 4, 0)]
-        features_dim_temp = features_dim[::-1]
-        for i, feature in enumerate(features_dim_temp[:-1]):
+        features_dim_temp = features_dim[::-1] # reverse the list
+        for i, feature in enumerate(features_dim_temp[:-1]): # excluding last one
             if i > 4:
                 layers_conv.insert(0, ConvBlock(feature, feature, 3, 1))
             else:
@@ -361,7 +361,7 @@ class Discriminator(nn.Module):
             if i > 0:
                 # Downsample for further usage
                 result = nn.functional.interpolate(result, scale_factor=0.5, mode='bilinear',
-                                                   align_corners=False)
+                                                   align_corners=False) # downsample with 1/2
                 # Alpha set, combine the result of different layers when input
                 if i == step and 0 <= alpha < 1:
                     result_next = self.from_rgbs[layer_index + 1](image)
@@ -373,7 +373,7 @@ class Discriminator(nn.Module):
         # Now, result is [batch, channel(512), 1, 1]
         # Convert it into [batch, channel(512)], so the fully-connetced layer
         # could process it.
-        result = result.squeeze(2).squeeze(2)
+        result = result.squeeze(2).squeeze(1) #  result.squeeze(2).squeeze(2)
         result = self.fc(result)
         return result
 
