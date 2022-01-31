@@ -83,8 +83,6 @@ for epoch in range(epochs):
             aux_error_real = aux_criterion(aux_output, label)
 
             total_error_real = disc_error_real + aux_error_real
-            total_error_real.backward()
-            optimD.step()
             D_x = disc_output.data.mean()
 
             # get the current classification accuracy
@@ -104,14 +102,15 @@ for epoch in range(epochs):
                 disc_output_fake))  # Train discriminator that it is fake image
             aux_error_fake = aux_criterion(aux_output_fake, fake_label)
             total_error_fake = disc_error_fake + aux_error_fake
-            total_error_fake.backward()
+            total_error = total_error_fake + total_error_real
+
+            total_error.backward()
             optimD.step()
 
             # Now we train the generator as we have finished updating weights of the discriminator
-            netG.zero_grad()
+            optimG.zero_grad()
             disc_output_fake, aux_output_fake = netD(fake_image)
-            disc_error_fake = disc_criterion(disc_output_fake, torch.ones_like(
-                disc_output_fake))  # Fool the discriminator that it is real
+            disc_error_fake = disc_criterion(disc_output_fake, torch.ones_like(disc_output_fake)) # Fool the discriminator that it is real
             aux_error_fake = aux_criterion(aux_output_fake, fake_label)
             total_error_gen = disc_error_fake + aux_error_fake
             total_error_gen.backward()
