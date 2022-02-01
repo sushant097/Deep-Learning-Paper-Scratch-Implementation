@@ -7,9 +7,11 @@
 It consists of various deep learning paper implementations from scratch, including GANs, Transformers, and more with PyTorch or TensorFlow.
 
 
-I try to make implementation as simple as possible.
+I try to make implementation as simple as possible.  Don't forgot to star ✴, if it it helps you.
 
-Framework: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white)
+
+
+Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white)
 
 ## Implemented Paper:
 * GANs
@@ -19,6 +21,9 @@ Framework: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&l
   * [DCGAN - Celebrity Face Generation](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/DCGAN_Celebrity_Generation)
   * [ProGAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/ProGAN)
   * [StyleGAN (Under Implementation)](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/StyleGAN)
+  * [LSGAN ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/LSGAN)
+  * [WGAN ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN)
+  * [WGAN-GP ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN-GP)
 
 * Transformer
     *  [Transformer From Scatch - PyTorch](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Tranformer_from_scratch_implementation)
