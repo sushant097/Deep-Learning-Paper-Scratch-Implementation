@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 
 
 def gradient_penalty(critic, real_img, fake_img, device="cpu"):
@@ -8,7 +7,8 @@ def gradient_penalty(critic, real_img, fake_img, device="cpu"):
     epislon = epsilon.repeat(1, C, H, W).to(device) # repeat fo all C, H, W
     # compute interpolation
     interpolated_images = real_img * epislon + fake_img * (1 - epislon)
-
+    # print(f"FakeImage: {fake_img.shape}, e:{epislon.shape}")
+    print(f"RealImage: {real_img.shape}")
     # calculate critic scores
     mixed_scores = critic(interpolated_images)
 

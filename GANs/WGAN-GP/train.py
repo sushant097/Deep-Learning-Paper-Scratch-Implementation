@@ -32,12 +32,13 @@ dataloader = torch.utils.data.DataLoader(
         transform=transforms
     ),
     batch_size=batch_size,
-    shuffle=True
+    shuffle=True,
+    drop_last=True
 )
 
 # Step2: Define Generator and discriminator
-gen = Generator(hidden_dim, img_channels).to(device)
-critic = Discriminator(img_channels).to(device)
+gen = Generator(hidden_dim, img_channels, features_g=8).to(device)
+critic = Discriminator(img_channels, features_d=8).to(device)
 # intialize weights
 init_weights(gen)
 init_weights(critic)

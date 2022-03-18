@@ -5,40 +5,40 @@ from torch.autograd import Variable
 
 
 class Generator(nn.Module):
-    def __init__(self, hidden_dim, out_channels):
+    def __init__(self, hidden_dim, out_channels, features_g):
         # Input: NxCx1x1
         super(Generator, self).__init__()
         self.model = nn.Sequential(
             # Block 1
-            nn.ConvTranspose2d(in_channels=hidden_dim, out_channels=1024, kernel_size=4, stride=1, padding=0),
-            nn.BatchNorm2d(1024),
+            nn.ConvTranspose2d(in_channels=hidden_dim, out_channels=features_g*16, kernel_size=4, stride=1, padding=0),
+            nn.BatchNorm2d(features_g*16),
             nn.ReLU(inplace=True),
 
-            # 1: 1024x4x4 :
+            # 1: Nx1024x4x4 :
             # Block 2
-            nn.ConvTranspose2d(in_channels=1024, out_channels=512, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(512),
+            nn.ConvTranspose2d(in_channels=features_g*16, out_channels=features_g*8, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(features_g*8),
             nn.ReLU(inplace=True),
 
-            #2: 512x8x8
+            #2: Nx512x8x8
             # Block 3
-            nn.ConvTranspose2d(in_channels=512, out_channels=256, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(256),
+            nn.ConvTranspose2d(in_channels=features_g*8, out_channels=features_g*4, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(features_g*4),
             nn.ReLU(inplace=True),
 
-            # 3: 512x16x16
+            # 3: Nx512x16x16
             # Block 4
-            nn.ConvTranspose2d(in_channels=256, out_channels=128, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(128),
+            nn.ConvTranspose2d(in_channels=features_g*4, out_channels=features_g*2, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(features_g*2),
             nn.ReLU(inplace=True),
 
-            #4: 256x32x32
+            #4: Nx256x32x32
             # Output layer
-            nn.ConvTranspose2d(in_channels=128, out_channels=out_channels, kernel_size=4, stride=2, padding=1)
+            nn.ConvTranspose2d(in_channels=features_g*2, out_channels=out_channels, kernel_size=4, stride=2, padding=1)
 
 
         )
-        # Final Output: 3x64x64
+        # Final Output: Cx64x64
         self.act = nn.Tanh()
 
     def forward(self, x):
@@ -46,37 +46,43 @@ class Generator(nn.Module):
 
 
 class Discriminator(nn.Module):
-    def __init__(self, in_channels):
+    def __init__(self, in_channels, features_d):
 
         super(Discriminator, self).__init__()
         self.model = nn.Sequential(
             # input: N x channels_img x 64 x 64
             # Block 1
-            nn.Conv2d(in_channels=in_channels, out_channels=256, kernel_size=4, stride=2, padding=1),
-            nn.InstanceNorm2d(256, affine=True),
+            nn.Conv2d(in_channels=in_channels, out_channels=features_d, kernel_size=4, stride=2, padding=1),
+            nn.InstanceNorm2d(features_d, affine=True),
             nn.LeakyReLU(0.2, inplace=True),
 
-            # Intermediate: 256x16x16
+            # Intermediate: features_d X 32 X 32
             # Block 2
-            nn.Conv2d(in_channels=256, out_channels=512, kernel_size=4, stride=2, padding=1),
-            nn.InstanceNorm2d(512, affine=True),
+            nn.Conv2d(in_channels=features_d, out_channels=features_d*2, kernel_size=4, stride=2, padding=1),
+            nn.InstanceNorm2d(features_d*2, affine=True),
             nn.LeakyReLU(0.2, inplace=True),
 
-            # Intermediate: 512x8x8
+            # Intermediate: features_d*2 X 16 X 16
             # Block 3
-            nn.Conv2d(in_channels=512, out_channels=1024, kernel_size=4, stride=2, padding=1),
-            nn.InstanceNorm2d(1024, affine=True),
+            nn.Conv2d(in_channels=features_d*2, out_channels=features_d*4, kernel_size=4, stride=2, padding=1),
+            nn.InstanceNorm2d(features_d*4, affine=True),
             nn.LeakyReLU(0.2, inplace=True),
 
-            # Intermediate: 1024x4x4
+            # Intermediate: features_d*4 X 8 X 8
+            # Block 4
+            nn.Conv2d(in_channels=features_d*4, out_channels=features_d*8, kernel_size=4, stride=2, padding=1),
+            nn.InstanceNorm2d(features_d*8, affine=True),
+            nn.LeakyReLU(0.2, inplace=True),
+
+            # Intermediate: features_d*8 X 4 X 4
         )
 
         self.output = nn.Sequential(
             # Sigmoid is not used as output in D.
-            nn.Conv2d(in_channels=1024, out_channels=1, kernel_size=4, stride=2, padding=0)
+            nn.Conv2d(in_channels=features_d*8, out_channels=1, kernel_size=4, stride=2, padding=0)
 
         )
-        # Final output:1024x1x1
+        # Final output:1x1x1
 
     def forward(self, x):
         x = self.model(x)
@@ -95,24 +101,27 @@ def denorm_image(image):
 
 if __name__ == "__main__":
     # Test
-    netD = Discriminator(
-        in_channels=3,
-    )
-    print(netD)
-    print("Input(=image) : ")
-    print(torch.randn(128, 3, 32, 32).size())
-    y = netD(Variable(torch.randn(128, 3, 32, 32)))  # Input should be a 4D tensor
-    print("Output(batchsize, channels, width, height) : ")
+    N, in_channels, H, W = 8, 3, 64, 64
+    noise_dim = 100
 
-    print(y.size())
+    x = torch.randn((N, in_channels, H, W))
+    disc = Discriminator(in_channels, features_d=N)
+    print(disc(x).shape)
+    assert disc(x).shape == (N, 1, 1, 1), "Discriminator test failed"
+    gen = Generator(noise_dim, in_channels, features_g=N)
+    z = torch.randn((N, noise_dim, 1, 1))
+    assert gen(z).shape == (N, in_channels, H, W), "Generator test failed"
 
-    net = Generator(
-        hidden_dim=100,
-        out_channels=3,
-    )
-    print(net)
-    print( "Input(=z) : ",)
-    print(torch.randn(128, 100, 1, 1).size())
-    y = net(Variable(torch.randn(25, 100, 1, 1)))  # Input should be a 4D tensor
-    print("Generator Output:",y.size())
-    print ("Output(batchsize, channels, width, height) : ",)
+    # print(netD)
+    # print("Input(=image) : ")
+    # print(torch.randn(N, in_channels, H, W).size())
+    # y = netD(Variable(torch.randn(noise_dim, in_channels, H, W)))  # Input should be a 4D tensor
+    # print("Output of discr(batchsize, channels, width, height) : ")
+    #
+    # print(y.size())
+    # print(net)
+    # print( "Input(=z) : ",)
+    # print(torch.randn(128, 100, 1, 1).size())
+    # y = net(Variable(torch.randn(25, 100, 1, 1)))  # Input should be a 4D tensor
+    # print("Generator Output:",y.size())
+    # print ("Output(batchsize, channels, width, height) : ",)
