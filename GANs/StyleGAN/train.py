@@ -1,6 +1,6 @@
 # ToDO: Training of Style GAN
 
-# use idel gpu
+# use ideal gpu
 # it's better to use enviroment variable
 # if you want to use multiple gpus, please
 # modify hyperparameters at the same time

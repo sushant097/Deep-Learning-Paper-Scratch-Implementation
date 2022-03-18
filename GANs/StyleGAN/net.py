@@ -4,7 +4,8 @@ from torch.nn.parameter import Parameter
 import torch.nn.functional as F
 import math
 
-from helper_functions import AdaIn, quick_scale, ScaleNoiseB_, ScaledLinear, ScaledConv2d,PixelNormalization, LearnedAffineTrans_A
+from helper_functions import AdaIn, quick_scale, ScaleNoiseB_, ScaledLinear, ScaledConv2d, PixelNormalization, \
+    LearnedAffineTrans_A
 
 # features
 features_dim = [512, 512, 512, 512, 256, 128, 64, 32, 16]
@@ -50,6 +51,7 @@ class StyleConvBlockInitial(nn.Module):
 
 
 # General Style Convolutional Blocks
+# ToDO: Implementation error, in forward(). As input x is not used.
 class StyleConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, latent_dim):
         super().__init__()
@@ -149,7 +151,7 @@ class MappingNetwork(nn.Module):
 
 
 # Generator
-class StyleSynthesisNetwork(nn.Module): # StyleBasedGenerator
+class StyleSynthesisNetwork(nn.Module):  # StyleBasedGenerator
     """
     Main Style Synthesis Module
     Convs:
@@ -317,8 +319,8 @@ class Discriminator(nn.Module):
         self.from_rgbs = nn.ModuleList([*layers_rgbs])
 
         layers_conv = [ConvBlock(513, 512, 3, 1, 4, 0)]
-        features_dim_temp = features_dim[::-1] # reverse the list
-        for i, feature in enumerate(features_dim_temp[:-1]): # excluding last one
+        features_dim_temp = features_dim[::-1]  # reverse the list
+        for i, feature in enumerate(features_dim_temp[:-1]):  # excluding last one
             if i > 4:
                 layers_conv.insert(0, ConvBlock(feature, feature, 3, 1))
             else:
@@ -354,14 +356,14 @@ class Discriminator(nn.Module):
                 result = torch.cat([result, mean_std], 1)
                 # Out dim: [batch, 512 + 1, 4, 4]
 
-            # Conv
-            result = self.convs[layer_index](result)
+                # Conv
+                result = self.convs[layer_index](result)
 
             # Not the final layer
             if i > 0:
                 # Downsample for further usage
                 result = nn.functional.interpolate(result, scale_factor=0.5, mode='bilinear',
-                                                   align_corners=False) # downsample with 1/2
+                                                   align_corners=False)  # downsample with 1/2
                 # Alpha set, combine the result of different layers when input
                 if i == step and 0 <= alpha < 1:
                     result_next = self.from_rgbs[layer_index + 1](image)
@@ -373,10 +375,6 @@ class Discriminator(nn.Module):
         # Now, result is [batch, channel(512), 1, 1]
         # Convert it into [batch, channel(512)], so the fully-connetced layer
         # could process it.
-        result = result.squeeze(2).squeeze(1) #  result.squeeze(2).squeeze(2)
+        result = result.squeeze(2).squeeze(1)  # result.squeeze(2).squeeze(2)
         result = self.fc(result)
         return result
-
-
-
-
