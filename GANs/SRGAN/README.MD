@@ -5,7 +5,7 @@ I try to make the implementation as simple as possible.
 ![](srgan_architecture.png)
 
 ### To train
-- make cetain changes in `config.py`
+- make certain changes in `config.py`
 - train using `train.py`
 
 # Abstract
