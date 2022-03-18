@@ -24,6 +24,7 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
   * [LSGAN ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/LSGAN)
   * [WGAN ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN)
   * [WGAN-GP ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN-GP)
-
+  * [SRGAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/SRGAN)
+  
 * Transformer
     *  [Transformer From Scatch - PyTorch](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Tranformer_from_scratch_implementation)
