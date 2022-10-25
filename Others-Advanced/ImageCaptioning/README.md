@@ -4,6 +4,8 @@ Simple Implementation ofImage Captioning in PyTorch.
 ### Dataset
 The Flickr8k dataset is used. Download it from [here](https://www.kaggle.com/datasets/e1cd22253a9b23b073794872bf565648ddbe4f17e7fa9e74766ad3707141adeb)
 
+### Architecture
+![](images/image_captioning.png)
 ### Training 
 ```
 train.py: For training the network
