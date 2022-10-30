@@ -28,6 +28,7 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
   
 * Modern CNN
   * [Deep Residual Network](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/blob/master/Modern%20CNN/deep_residual_network.py)
+  * [ResNeXt Paper](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/blob/master/Modern%20CNN/resnext.py)
 
 * Transformer
     *  [Transformer From Scatch - PyTorch](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Tranformer_from_scratch_implementation)
