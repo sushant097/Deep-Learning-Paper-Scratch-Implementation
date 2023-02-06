@@ -1,7 +1,9 @@
-## Vision Transformer
+# Vision Transformer
 
 This is the scratch Implementation of the Paper ["An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale, 2020"](https://arxiv.org/abs/2010.11929). 
 
+## Overview
+![](vit_overview.gif)
 
 **Implementation: [Vision Transformer](vision_transformer_implementation.ipynb)**
 
