@@ -31,8 +31,9 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
   * [ResNeXt Paper](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/blob/master/Modern%20CNN/resnext.py)
 
 * Transformer
-    *  [Transformer From Scatch - PyTorch](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Tranformer_from_scratch_implementation)
-    * [Vision Transformer](Tranformer/ViT/vit-scratch-implementation-pytorch.ipynb)
+    *  [Transformer Implementation 1](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Transformer/Standard-Transformer/)
+    *  [Transformer Implementation 2](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Transformer/Universal-Transformer/)
+    * [Vision Transformer](Transformer/ViT/)
 
 * Advanced
   * [Image Captioning](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Others-Advanced/ImageCaptioning)
