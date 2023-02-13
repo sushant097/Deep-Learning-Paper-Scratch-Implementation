@@ -20,7 +20,7 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
   * [Neural Style Transfer](https://github.com/sushant097/Neural-Style-Transfer-Implementation)
   * [DCGAN - Celebrity Face Generation](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/DCGAN_Celebrity_Generation)
   * [ProGAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/ProGAN)
-  * [StyleGAN (Under Implementation)](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/StyleGAN)
+  * [StyleGAN2 (Under Implementation)](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/StyleGAN2)
   * [LSGAN ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/LSGAN)
   * [WGAN ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN)
   * [WGAN-GP ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN-GP)
