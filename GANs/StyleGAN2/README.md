@@ -2,16 +2,12 @@
 #### Simple and readable implementation of StyleGAN in PyTorch.
 I try to make simple implementation and as similar to official implementation.
 
-**[Part of 30 Day GAN paper Reading Challenge](https://github.com/sushant097/30-Days-GANs-Paper-Reading)**
+**[Part of Deep Learning paper Reading Challenge](https://github.com/sushant097/30-Days-GANs-Paper-Reading)**
 
 **Training - Implementation Going!**
 
-#### StyleGAN architecture
-
-StyleGAN Architecture            |  Generator Architecture
-:-------------------------:|:-------------------------:
-![](stylegan_architecture.png) |  ![](stylegan_generator_architecture.png)
-
+#### StyleGAN2 architecture
+![](Stylegan2Architecture.png)
 
 Want to know more on StyleGAN, see : **[Style GAN Annotated Paper & Summary](https://github.com/sushant097/annotated_research_papers/blob/master/GANs/StyleGAN-2018.pdf)**
 
