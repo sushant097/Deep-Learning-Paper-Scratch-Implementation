@@ -75,8 +75,46 @@ class Generator(nn.Module):
         * `max_features` maximum number of features in any generator block
         """
         super().__init__()
+        # calculate the number of features for each block
+        # like [512, 512, 256, 128, 64, 32]
+        features = []
+        for i in range(log_resolution -2, -1, -1):
+            features.append(min(max_features, n_features * (2**i)))
+        # no.of generator blocks
+        self.n_blocks = len(features)
+        # trainable 4x4 constant
+        self.initial_constant = nn.Parameter(torch.randn(1, features[0], 4, 4))
+        # first style block 4x4 resolution and a layer for RGB
+        self.style_block = StyleBlock(d_latent, features[0], features[0])
+        self.to_rgb = ToRGB(d_latent, features[0])
 
-        pass
+        # Generator blocks
+        blocks = [GeneratorBlock(d_latent, features[i - 1], features[0]) for i in range(1, self.n_blocks)]
+        self.blocks = nn.ModuleList(blocks)
+
+        # 2× up sampling layer. The feature space is up sampled at each block
+        self.up_sample = UpSample()
+
+    def forward(self, w: torch.Tensor, input_noise:List[Tuple[Optional[torch.Tensor]], Optional[torch.Tensor]]):
+        """
+        In order to mix-styles (use different w for different layers), we provide a separate w for each generator block.
+        It has shape [n_blocks, batch_size, d_latent] .
+        input_noise is the noise for each block. It's a list of pairs of noise sensors because each block (except the initial) has two noise inputs after each convolution layer (see the diagram).
+        """
+        # batch size
+        batch_size = w.shape[1]
+        # expand constant to match batch size
+        x = self.initial_constant.expand(batch_size, -1, -1, -1)
+        # 1st style block
+        x = self.style_block(x, w[0], input_noise[0][1])
+        # first rgb image
+        rgb = self.to_rgb(x, w[0])
+        # rest of the blocks
+        for i in range(1, self.n_blocks):
+            x = self.up_sample(x)
+            x, rgb_new = self.blocks[i - 1](x, w[i], input_noise[i])
+            rgb = self.up_sample(rgb) + rgb_new
+        return rgb
 
 
 class GeneratorBlock(nn.Module):
@@ -93,7 +131,29 @@ class GeneratorBlock(nn.Module):
         """
         super().__init__()
 
-        pass
+        # First style block changes the feature map size to out_features
+        self.style_block1 = StyleBlock(d_latent, in_features, out_features)
+        # Second style block
+        self.style_block2 = StyleBlock(d_latent, out_features, out_features)
+        # rgb_layer
+        self.to_rgb = ToRGB(d_latent, out_features)
+
+    def forward(self, x: torch.Tensor, w: torch.Tensor, noise: Tuple[Optional[torch.Tensor], Optional[torch.Tensor]]):
+        """
+        x is the input feature map of shape [batch_size, in_features, height, width]
+        w is w with shape [batch_size, d_latent]
+        noise is a tuple of two noise tensors of shape [batch_size, 1, height, width]
+        """
+
+        # First style block with first noise tensor.
+        # Shape: (N x out_features x height x width)
+        x = self.style_block1(x, w, noise[0])
+        # Second style block with second noise tensor.
+        # Shape: (N x out_features x height x width)
+        x = self.style_block2(x, w, noise[1])
+        # get rgb image
+        rgb = self.to_rgb(x, w)
+        return x, rgb
 
 
 class StyleBlock(nn.Module):
