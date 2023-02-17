@@ -242,8 +242,61 @@ class Conv2dWeightModulate(nn.Module):
 
     def __init__(self, in_features: int, out_features: int, kernel_size: int, demodulate: float = True,
                  eps: float = 1e-8):
+        """
+            * `in_features` is the number of features in the input feature map
+            * `out_features` is the number of features in the output feature map
+            * `kernel_size` is the size of the convolution kernel
+            * `demodulate` is flag whether to normalize weights by its standard deviation
+            * `eps` is the epsilon for normalizing
+        """
         super().__init__()
-        pass
+        # Number of output features
+        self.out_features = out_features
+        # Whether to normalize weights
+        self.demodulate = demodulate
+        # Padding size
+        self.padding = (kernel_size - 1) // 2
+
+        # Weights parameter with equalized learning rate
+        self.weight = EqualizedWeight([out_features, in_features, kernel_size, kernel_size])
+        # epsilon
+        self.eps = eps
+
+    def forward(self, x: torch.Tensor, s: torch.Tensor):
+        """
+        * `x` is the input feature map of shape `[batch_size, in_features, height, width]`
+        * `s` is style based scaling tensor of shape `[batch_size, in_features]`
+        """
+
+        # Get batch size, height and width
+        b, _, h, w = x.shape
+
+        # Reshape the scales
+        s = s[:, None, :, None, None]
+        # Get learning rate equalized weights
+        weights = self.weight()[None, :, :, :, :]
+        #  w'[i,j,k] = s[i] * w[i,j,k] where i : i/p channel, j: o/p channel, and k: is the kernel index.
+        # The result has shape `[batch_size, out_features, in_features, kernel_size, kernel_size]`
+        weights = weights * s
+        # Demodulate
+        if self.demodulate:
+            sigma_inv = torch.rsqrt((weights ** 2).sum(dim=(2, 3, 4), keepdim=True) + self.eps)
+            weights = weights * sigma_inv
+
+        # Reshape `x`
+        x = x.reshape(1, -1, h, w)
+
+        # Reshape weights
+        _, _, *ws = weights.shape
+        weights = weights.reshape(b * self.out_features, *ws)
+
+        # Use grouped convolution to efficiently calculate the convolution with sample wise kernel.
+        # i.e. we have a different kernel (weights) for each sample in the batch
+        x = F.conv2d(x, weights, padding=self.padding, groups=b)
+
+        # Reshape `x` to `[batch_size, out_features, height, width]` and return
+        return x.reshape(-1, self.out_features, h, w)
+
 
 class Discriminator(nn.Module):
     """
