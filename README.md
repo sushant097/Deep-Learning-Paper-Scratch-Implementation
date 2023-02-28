@@ -25,6 +25,7 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
   * [WGAN ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN)
   * [WGAN-GP ](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/WGAN-GP)
   * [SRGAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/SRGAN)
+  * [Self-Attention GAN](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/GANs/SelfAttentionGAN)
   
 * Modern CNN
   * [Deep Residual Network](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/blob/master/Modern%20CNN/deep_residual_network.py)
