@@ -5,6 +5,7 @@ However, in the [SAGAN paper (Han et al. 2018)](https://arxiv.org/abs/1805.08318
 
 ### Self-attention module:
 It works as follows: 
+
 ![](self_attention_module_gan.png)
 
 1. Using a kernel size 1 convo to generate Query, Key and Value layers, with the shape of Channels * N, N = Width * Height.
