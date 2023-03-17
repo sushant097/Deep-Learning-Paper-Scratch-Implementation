@@ -37,8 +37,8 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
     * [Vision Transformer](Transformer/ViT/)
 
 * Segmentation
-  *  [UNet](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/ObjectDetectionAndSegmentation/Unet)
-  *  
+  *  [UNET](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/ObjectDetectionAndSegmentation/Unet)
+  *  [3D-UNET](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/ObjectDetectionAndSegmentation/3D-UNET)
 
 * Advanced
   * [Image Captioning](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Others-Advanced/ImageCaptioning)
