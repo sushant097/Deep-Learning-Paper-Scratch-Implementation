@@ -38,7 +38,7 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
 
 * Segmentation
   *  [UNet](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/ObjectDetectionAndSegmentation/Unet)
-  * 
+  *  
 
 * Advanced
   * [Image Captioning](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Others-Advanced/ImageCaptioning)
