@@ -36,5 +36,8 @@ Framework Used: ![](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-ba
     *  [Universal Transformer](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Transformer/Universal-Transformer/)
     * [Vision Transformer](Transformer/ViT/)
 
+* Segmentation
+  *  
+
 * Advanced
   * [Image Captioning](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation/tree/master/Others-Advanced/ImageCaptioning)
