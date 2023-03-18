@@ -4,7 +4,7 @@
 [![Ask Me Anything !](https://img.shields.io/badge/ask%20me-linkedin-1abc9c.svg)](https://www.linkedin.com/in/susan-gautam/)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
-It consists of various deep learning paper implementations from scratch, including GANs, Transformers, and more with PyTorch.
+It consists of various deep learning paper implementations from scratch, including GANs, Transformers, and more with PyTorch. 
 
 
 I try to make implementation as simple as possible.  Don't forgot to star ✴, if  it helps you.
