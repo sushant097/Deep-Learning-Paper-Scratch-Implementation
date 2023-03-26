@@ -3,7 +3,7 @@
 [![Website shields.io](https://img.shields.io/badge/website-up-yellow)](https://github.com/sushant097/Deep-Learning-Paper-Scratch-Implementation)
 
 [![Ask Me Anything !](https://img.shields.io/badge/ask%20me-linkedin-1abc9c.svg)](https://www.linkedin.com/in/susan-gautam/)
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org) 
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)  
 
 It consists of various deep learning paper implementations from scratch, including GANs, Transformers, and more with PyTorch. 
 
